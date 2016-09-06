@@ -3,6 +3,8 @@
 ## Prerequisite Technologies
 
 ### Memcached Server
+Standarp port: 11211
+
 For Using Memcached Server try this commands:
 
 ```bash
