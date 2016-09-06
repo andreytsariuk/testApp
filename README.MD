@@ -12,6 +12,13 @@ $ sudo sudo /etc/init.d/memcached restart
 
 The module for working with it have been already installed.
 
+### Used Modules:
+* *Socket.io*; <a href="http://socket.io/">Socket.io official source</a>
+* *memcached-npm*; <a href="https://www.npmjs.com/package/memcached">Documentation for memcached </a>
+* *angular-growl (Notification system)*; <a href="https://github.com/JanStevens/angular-growl-2">GitHub source</a>
+* *cron*; <a href="https://www.npmjs.com/package/cron">Documentation of cron</a>
+
+
 ### Versions
 Here some versions :
 * *Node.js* - v6.4.0;
