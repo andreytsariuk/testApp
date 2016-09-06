@@ -1,0 +1,95 @@
+<div growl> </div>
+<section class="welcome container-fluid" data-ng-controller="IndexController">
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      Form for Creating New Task
+    </div>
+    <div class="panel-body">
+      <div class="col-md-12 row">
+        <div class=" col-md-4 panelFooterHeight">
+          <div class="marginTop">
+            <p class="input-group">
+              <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="dt" is-open="popup1.opened" datepicker-options="dateOptions"
+                ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
+              <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+            </p>
+          </div>
+        </div>
+        <div class="col-md-3 panelFooterHeight">
+          <div uib-timepicker ng-model="mytime" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></div>
+          <hr>
+        </div>
+
+        <div class="col-md-2 panelFooterHeight">
+          <select class="form-control marginTop" ng-model="number" ng-options="opt for opt in numbers.mstep">{{number}}</select>
+        </div>
+        <div class="col-md-3 panelFooterHeight">
+          <button type="button"  class="btn btn-mb btn-primary marginTop center-block" ng-click="save()"> Save  </button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      Tasks
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <table ng-table="vm.tableParams" class="table" show-filter="true">
+          <tr ng-repeat="task in $data track by $index">
+            <td title="'Id'" sortable="'id'">
+              <h4 class="text-center">
+                {{task.id}}
+              </h4>
+            </td>
+            <td title="'Date'" filter="{ date: 'text'}" sortable="'date'">
+              <h4 class="text-center">
+                {{task.date | date:'mediumDate'}}
+              </h4>
+            </td>
+            <td title="'Time'" filter="{ date: 'text'}" sortable="'date'">
+              <h4 class="text-center">
+                {{task.date| date:'shortTime'}}
+              </h4>
+            </td>
+            <td title="'Number'" filter="{ number: 'number'}" sortable="'number'">
+              <h4 class="text-center">
+                {{task.number}}
+              </h4>
+            </td>
+            <td title="'Completed'" filter="{ completed: 'text'}" sortable="'completed'">
+              <h4 class="text-center text-{{ task.completed ? 'success' : 'danger'}}">
+                {{task.completed}}
+              </h4>
+            </td>
+            <td>
+              <button class="btn btn-danger" ng-click="remove(task)"><i class="glyphicon glyphicon-trash"></i></button>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3 " ng-repeat="completedTask in completedTasks track by $index">
+      <div class="panel panel-success">
+        <div class="panel-heading">
+          Multiply Table for {{completedTask.number}}
+        </div>
+        <div class="panel-body panelBodyHeight">
+          <h4 ng-repeat="string in completedTask.multiplyTable">{{string}}</h4>
+        </div>
+        <div class="panel-footer panelFooterHeight">
+          Completed By Tasks with id :
+          <span ng-repeat="id in completedTask.tasksIds track by $index "> {{id}}, </span>
+        </div>
+      </div>
+    </div>
+
+</section>
