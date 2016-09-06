@@ -1,8 +1,6 @@
 'use strict';
 
-var mean = require('meanio'),
-    cron = require('../controllers/cron.js'),
-    // globalEE = require('global-eventemitter'),
+var cron = require('../controllers/cron.js'),
     index = require('../controllers/index.js');
 module.exports = function (MeanStarter, app, io, auth, database) {
 

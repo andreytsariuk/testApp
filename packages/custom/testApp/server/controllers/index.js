@@ -1,8 +1,6 @@
 'use strict';
 
-var mongoose = require('mongoose'),
-    _ = require('lodash'),
-    config = require('config'),
+var config = require('config'),
     async = require('async'),
     Memcached = require('memcached'),
     memcached = new Memcached('localhost:' + config.memcache.port);
@@ -13,7 +11,7 @@ function getTasks(io) {
     memcached.get('tasks', function (err, tasks) {
         if (err) {
             console.log('Error : memcached : ', err);
-            return callback(err);
+            io.emit('io', err);
         } else {
             if (!tasks) {
                 tasks = [];
@@ -65,25 +63,12 @@ function generateIdForTask(tasks) {
     return id;
 }
 
-// function memTestConnect(callback) {
 
-//     var memcached = new Memcached('localhost:11211');
-
-//     memcached.set('hello', 'world', lifetime, function (err, result) {
-//         if (err) {
-//             console.error(err);
-//         } else {
-//             memcached.get('hello', function (err, result) {
-//                 if (err) console.error(err);
-//                 console.log(result);
-//                 callback();
-//             });
-//         }
-
-//     });
-
-// }
-
+/**This is function for removing task from Memcached Server
+ * @param io is a scoket.io
+ * @param task is a current task
+ * @param callback is callback function 
+ */
 function removeTaskInMem(io, task, callback) {
 
     //Checking for task exists
@@ -147,6 +132,11 @@ function removeTaskInMem(io, task, callback) {
 }
 
 
+/**This is function for saving task in Memcached Server
+ * @param io is a scoket.io
+ * @param task is a current task
+ * @param callback is callback function 
+ */
 function saveTaskInMem(io, task, callback) {
 
     //Checking for task exists
@@ -154,8 +144,6 @@ function saveTaskInMem(io, task, callback) {
         io.emit('error', 'No one task have been Send!');
         return callback();
     }
-
-
 
     //try to get tasks from memchached
     memcached.get('tasks', function (err, tasks) {

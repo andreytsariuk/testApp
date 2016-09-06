@@ -1,9 +1,9 @@
+/* jshint ignore:start */
 'use strict';
 
 var CronJob = require('cron').CronJob,
     Memcached = require('memcached'),
     config = require('config'),
-    globalEE = require('global-eventemitter'),
     memcached = new Memcached('localhost:' + config.memcache.port);
 
 const lifetime = 86400; //24hrs
@@ -44,7 +44,7 @@ function getTasks(io) {
     memcached.get('tasks', function (err, tasks) {
         if (err) {
             console.log('Error : memcached : ', err);
-            return callback(err);
+            io.emit('error', err);
         } else {
             if (!tasks) {
                 tasks = [];
@@ -68,7 +68,9 @@ function completeTask(task,io) {
 
 }
 
-
+/**This is main CROn function for checking time in tasks
+ * @param io is a socket.io
+ */
 function check(io) {
     new CronJob('00 * * * * *', function (callback) {
         memcached.get('tasks', function (err, tasks) {
@@ -104,7 +106,9 @@ function check(io) {
         console.log('stop Cron');
     }, true, 'Europe/Kiev');
 
-};
+}
 
 
 exports.check = check;
+
+/* jshint ignore:end */

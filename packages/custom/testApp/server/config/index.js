@@ -1,7 +1,6 @@
 'use strict';
 
-var config = require('meanio').loadConfig(),
-    socketio = require('socket.io');
+var socketio = require('socket.io');
 
 
 module.exports = function(http) {

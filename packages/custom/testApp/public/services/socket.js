@@ -1,3 +1,4 @@
+/* jshint ignore:start */
 'use strict';
 var baseUrl = 'localhost:3000';
 
@@ -28,3 +29,5 @@ angular
             }
         };
     });
+
+    /* jshint ignore:end */

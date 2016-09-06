@@ -31,6 +31,10 @@ angular
           this.tasksIds = [];
         }
 
+
+        /** This function for adding a completeTask id into exists array of ids 
+        * @param tasksId is id of current task
+        */
         addTaskId(tasksId) {
           var exists = false;
           for (let i = 0; i < this.tasksIds.length; i++) {
@@ -41,6 +45,10 @@ angular
           if (!exists)
             this.tasksIds.push(tasksId);
         }
+
+        /** This function for removing a completeTask from exists array of ids or completeTask ta all... 
+        * @param task is a current task
+        */
         static removeTask(task) {
           for (let i = 0; i < $scope.completedTasks.length; i++) {
             let flag = false;
@@ -120,131 +128,6 @@ angular
       //--------------------------------------- END Classes-------------------------
 
 
-
-
-
-      /** This is function for Create array of completed Tasks
-       * @param tasks is array of all tasks
-       */
-      function createCompletedTasks(tasks) {
-        for (let i = 0; i < tasks.length; i++) {
-          if (tasks[i].completed) {
-            let indexOfCompleteTask = CompleteTask.checkExistsOfMultiplyTable(tasks[i].number);
-            if (indexOfCompleteTask || indexOfCompleteTask === 0) {
-              $scope.completedTasks[indexOfCompleteTask].addTaskId(tasks[i].id);
-            } else {
-              let newCompleteTask = new CompleteTask(CompleteTask.returnMultiplyTable(tasks[i].number), tasks[i].number);
-              newCompleteTask.addTaskId(tasks[i].id);
-              $scope.completedTasks.push(newCompleteTask);
-            }
-          }
-        }
-        console.log($scope.completedTasks);
-      }
-
-
-      $scope.remove = Task.remove;
-      $scope.save = Task.save;
-
-
-      //-----------------------------------------time picker----------------------------------------
-
-
-
-      $scope.mytime = new Date();
-
-      $scope.hstep = 1;
-      $scope.mstep = 1;
-
-
-      $scope.ismeridian = true;
-      $scope.toggleMode = function () {
-        $scope.ismeridian = !$scope.ismeridian;
-      };
-
-      $scope.update = function () {
-        var d = $scope.dt;
-        d.setHours(14);
-        d.setMinutes(0);
-        $scope.mytime = d;
-      };
-
-      $scope.changed = function () {
-        $log.log('Time changed to: ' + $scope.mytime);
-      };
-
-      $scope.clear = function () {
-        $scope.mytime = null;
-      };
-
-
-      //---------------------------------------time picker --------------------------------------------
-
-      $scope.today = function () {
-        $scope.dt = new Date();
-      };
-      $scope.today();
-
-      $scope.clear = function () {
-        $scope.dt = null;
-      };
-
-      $rootScope.$watch(function () {
-        return $scope.dt;
-      }, function () {
-        $scope.mytime = $scope.dt;
-      });
-
-      $scope.dateOptions = {
-
-        formatYear: 'yy',
-        maxDate: new Date(2020, 5, 22),
-        minDate: new Date(),
-        startingDay: 1
-      };
-
-
-      $scope.open1 = function () {
-        $scope.popup1.opened = true;
-      };
-
-      $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
-      $scope.format = $scope.formats[0];
-      $scope.altInputFormats = ['M!/d!/yyyy'];
-
-      $scope.popup1 = {
-        opened: false
-      };
-
-      //------------------------------------NgTable Options-----------------------
-      $scope.vm = {};
-      $scope.vm.tableParams = new NgTableParams(
-        {
-          page: 1,
-          count: 6,
-          sorting: {
-            date: 'desc',
-          },
-          filterDelay: 300
-        },
-        {
-          counts: [3, 6, 9],
-          getData: function (params) {
-            params.total($scope.tasks.length);
-            createCompletedTasks($scope.tasks);
-            var filteredData = params.filter() ? $filter('filter')($scope.tasks, params.filter()) : $scope.tasks;
-            var orderedData = params.sorting() ? $filter('orderBy')(filteredData, params.orderBy()) : filteredData;
-            var page = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
-            return page;
-          }
-        });
-
-
-
-      //------------------------------------NgTable Options-----------------------
-
-
-
       //----------------------------------- START Socket.IO Events-------------------------
       Socket.on('connected', function () {
         console.debug('Connected to the Socket.IO');
@@ -279,5 +162,120 @@ angular
       });
 
       //-----------------------------------END Socket.IO Events-------------------------
+
+
+
+      /** This is function for Create array of completed Tasks
+       * @param tasks is array of all tasks
+       */
+      function createCompletedTasks(tasks) {
+        for (let i = 0; i < tasks.length; i++) {
+          if (tasks[i].completed) {
+            let indexOfCompleteTask = CompleteTask.checkExistsOfMultiplyTable(tasks[i].number);
+            if (indexOfCompleteTask || indexOfCompleteTask === 0) {
+              $scope.completedTasks[indexOfCompleteTask].addTaskId(tasks[i].id);
+            } else {
+              let newCompleteTask = new CompleteTask(CompleteTask.returnMultiplyTable(tasks[i].number), tasks[i].number);
+              newCompleteTask.addTaskId(tasks[i].id);
+              $scope.completedTasks.push(newCompleteTask);
+            }
+          }
+        }
+        console.log($scope.completedTasks);
+      }
+
+
+      $scope.remove = Task.remove;
+      $scope.save = Task.save;
+
+
+      //-----------------------------------------START time picker----------------------------------------
+
+
+
+      $scope.mytime = new Date();
+
+      $scope.hstep = 1;
+      $scope.mstep = 1;
+
+      $scope.update = function () {
+        var d = $scope.dt;
+        d.setHours(14);
+        d.setMinutes(0);
+        $scope.mytime = d;
+      };
+
+      $scope.clear = function () {
+        $scope.mytime = null;
+      };
+
+
+      //---------------------------------------END time picker --------------------------------------------
+      //---------------------------------------START date picker --------------------------------------------
+      $scope.today = function () {
+        $scope.dt = new Date();
+      };
+      $scope.today();
+
+      $scope.clear = function () {
+        $scope.dt = null;
+      };
+
+
+      // simple watch for changes of date 
+      $rootScope.$watch(function () {
+        return $scope.dt;
+      }, function () {
+        $scope.mytime = $scope.dt;
+      });
+
+      $scope.dateOptions = {
+
+        formatYear: 'yy',
+        maxDate: new Date(2020, 5, 22),
+        minDate: new Date(),
+        startingDay: 1
+      };
+
+      $scope.popup1 = {
+        opened: false
+      };
+
+      $scope.open1 = function () {
+        $scope.popup1.opened = true;
+      };
+
+      $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+      $scope.format = $scope.formats[0];
+      $scope.altInputFormats = ['M!/d!/yyyy'];
+
+
+      //---------------------------------------END date picker --------------------------------------------
+      //------------------------------------START NgTable Options------------------------------------------
+      $scope.vm = {};
+      $scope.vm.tableParams = new NgTableParams(
+        {
+          page: 1,
+          count: 6,
+          sorting: {
+            date: 'desc',
+          },
+          filterDelay: 300
+        },
+        {
+          counts: [3, 6, 9],
+          getData: function (params) {
+            params.total($scope.tasks.length);
+            createCompletedTasks($scope.tasks);
+            var filteredData = params.filter() ? $filter('filter')($scope.tasks, params.filter()) : $scope.tasks;
+            var orderedData = params.sorting() ? $filter('orderBy')(filteredData, params.orderBy()) : filteredData;
+            var page = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
+            return page;
+          }
+        });
+
+
+
+      //------------------------------------END NgTable Options-----------------------------------------------
     }
   ]);
