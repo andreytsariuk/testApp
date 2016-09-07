@@ -68480,6 +68480,7 @@
 
 	'use strict';
 	
+	/* jshint ignore:start */
 	(function () {
 	  'use strict';
 	
@@ -68495,6 +68496,8 @@
 	    };
 	  }
 	})();
+	
+	/* jshint ignore:end */
 
 /***/ },
 /* 43 */
