@@ -59,7 +59,6 @@ function generateIdForTask(tasks) {
     if (id===-1) {
         id = tasks.length;
     }
-    console.log('new id',id);
     return id;
 }
 

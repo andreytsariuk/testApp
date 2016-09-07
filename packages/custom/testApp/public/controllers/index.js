@@ -180,7 +180,6 @@ angular
             }
           }
         }
-        console.log($scope.completedTasks);
       }
 
 

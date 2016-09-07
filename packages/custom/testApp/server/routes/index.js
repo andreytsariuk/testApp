@@ -11,7 +11,7 @@ module.exports = function (MeanStarter, app, io, auth, database) {
         var temp = {
             socket: socket.id
         };
-        console.log('--> One more user connected to notifications');
+        console.log('--> One more user connected to socket.io');
 
         // Setting up the socket
         setTimeout(function () {
@@ -20,7 +20,6 @@ module.exports = function (MeanStarter, app, io, auth, database) {
         }, 500);
 
         socket.on('saveTask', function (task) {
-            
             index.saveTaskInMem(io, task, function (err) {
                 if (err) {
                     console.log('Error : socket on save', err);
@@ -37,7 +36,7 @@ module.exports = function (MeanStarter, app, io, auth, database) {
         });
 
         socket.on('disconnect', function () {
-            console.log('<-- Notifications - user disconnected', temp.user, temp.socket);
+            console.log('<-- socket.io - user disconnected', temp.user, temp.socket);
 
         });
 

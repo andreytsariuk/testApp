@@ -68385,7 +68385,6 @@
 	        }
 	      }
 	    }
-	    console.log($scope.completedTasks);
 	  }
 	
 	  $scope.remove = Task.remove;

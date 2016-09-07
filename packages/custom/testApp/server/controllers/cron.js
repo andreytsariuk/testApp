@@ -60,7 +60,7 @@ function getTasks(io) {
  * @param task current task
  * @param io this is socket.io
  */
-function completeTask(task,io) {
+function completeTask(task, io) {
     io.emit('taskComplete', {
         task: task,
         multiplyTable: returnMultiplyTable(task.number)
@@ -80,22 +80,28 @@ function check(io) {
             } else {
                 var nowDate = new Date();
                 if (tasks) {
+                    let completedFlag = false;
                     for (var i = 0; i < tasks.length; i = i + 1) {
                         let loopDate = new Date(tasks[i].date);
                         if (loopDate.getFullYear() === nowDate.getFullYear() && loopDate.getMonth() === nowDate.getMonth() && loopDate.getDate() === nowDate.getDate() && loopDate.getHours() === nowDate.getHours() && loopDate.getMinutes() === nowDate.getMinutes()) {
                             tasks[i].completed = true;
-                            completeTask(tasks[i],io);
+                            completedFlag = true;
+                            completeTask(tasks[i], io);
                         }
                     }
-                    saveTasks(tasks, function (err) {
-                        if (err) {
-                            console.log('Error : memcached Cron: ', err);
-                            return callback(err);
-                        } else {
-                            getTasks(io);
-                            return callback();
-                        }
-                    })
+                    if (completedFlag) {
+                        saveTasks(tasks, function (err) {
+                            if (err) {
+                                console.log('Error : memcached Cron: ', err);
+                                return callback(err);
+                            } else {
+                                getTasks(io);
+                                return callback();
+                            }
+                        });
+                    }else{
+                        return callback();
+                    }
 
                 } else {
                     return callback();
@@ -103,7 +109,8 @@ function check(io) {
             }
         });
     }, function () {
-        console.log('stop Cron');
+        var thisDate = new Date();
+        console.log('stop Cron in Time : ' + thisDate.getHours() + ':' + thisDate.getMinutes());
     }, true, 'Europe/Kiev');
 
 }
